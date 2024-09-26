@@ -10,7 +10,7 @@ def check_numbers(numbers):
     for num in numbers:
         str_num = str(num)
         
-        if len(str_num) != 4:
+        if len(str_num) < 4:
             continue
         
         sum1 = int(str_num[0]) + int(str_num[1])
@@ -20,6 +20,6 @@ def check_numbers(numbers):
         if sum1 == sum2:
             print(num)
 
-numbers = [round(random.randrange(0, 9999), 2) for _ in range(25)]
+numbers = [round(random.randrange(1000, 9999), 2) for _ in range(25)]
 print(numbers)
 check_numbers(numbers)

@@ -18,6 +18,6 @@ def replace_max_with_zero(arr):
     arr[max_index] = 0
     return arr
 
-A = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+A = [0, 1, 2, 8, 9, 5, 6, 7, 8, 9]
 
 print(replace_max_with_zero(A))
