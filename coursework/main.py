@@ -77,23 +77,41 @@ class Node:
 
     def update_neighbors(self, grid):
         self.neighbors = []
-        # Check all possible directions
-        if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_barrier():
-            self.neighbors.append(grid[self.row + 1][self.col])
-        if self.row > 0 and not grid[self.row - 1][self.col].is_barrier():
-            self.neighbors.append(grid[self.row - 1][self.col])
-        if self.col < self.total_rows - 1 and not grid[self.row][self.col + 1].is_barrier():
-            self.neighbors.append(grid[self.row][self.col + 1])
-        if self.col > 0 and not grid[self.row][self.col - 1].is_barrier():
-            self.neighbors.append(grid[self.row][self.col - 1])
+        # Directions: (row, col)
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
+        
+        for d in directions:
+            row = self.row + d[0]
+            col = self.col + d[1]
+            
+            # Check if the neighbor is within bounds
+            if 0 <= row < self.total_rows and 0 <= col < self.total_rows:
+                neighbor = grid[row][col]
+                
+                # If the neighbor is a barrier, skip it
+                if neighbor.is_barrier():
+                    continue
+                
+                # For diagonal moves, check if the adjacent nodes are not barriers
+                if d in [(-1, -1), (-1, 1), (1, -1), (1, 1)]:
+                    # Check the two adjacent nodes
+                    if grid[self.row + d[0]][self.col].is_barrier() or grid[self.row][self.col + d[1]].is_barrier():
+                        continue
+                
+                self.neighbors.append(neighbor)
 
     def __lt__(self, other):
         return False
 
-def h(p1, p2):
+def h(p1, p2, heuristic='manhattan'):
     x1, y1 = p1
     x2, y2 = p2
-    return abs(x1 - x2) + abs(y1 - y2)
+    if heuristic == 'manhattan':
+        return abs(x1 - x2) + abs(y1 - y2)
+    elif heuristic == 'euclidean':
+        return math.sqrt((x1 - x2)**2 + (y1 - y2)**2)
+    elif heuristic == 'chebyshev':
+        return max(abs(x1 - x2), abs(y1 - y2))
 
 def reconstruct_path(came_from, current, draw):
     while current in came_from:
